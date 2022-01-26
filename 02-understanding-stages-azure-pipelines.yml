@@ -13,32 +13,32 @@ stages:
 - stage: Build
   jobs:
     - job: FirstJob
-    steps:
-    - bash: echo Build FirstJob
+      steps:
+      - bash: echo Build FirstJob
     - job: SecondJob
-    steps:
-    - bash: echo Build SecondJob
+      steps:
+      - bash: echo Build SecondJob
 
 - stage: DevDeploy
   jobs:
     - job: DevDeploy
-    steps:
-    - bash: echo Build DevDeploy
+      steps:
+      - bash: echo Build DevDeploy
 
 - stage: QADeploy
   jobs:
     - job: QADeploy
-    steps:
-    - bash: echo Build QADeploy
+      steps:
+      - bash: echo Build QADeploy
 
 - stage: StageDeploy
   jobs:
     - job: StageDeploy
-    steps:
-    - bash: echo Build StageDeploy
+      steps:
+      - bash: echo Build StageDeploy
 
 - stage ProdDeploy
   jobs:
     - job: ProdDeploy
-    steps:
-    - bash: echo Build ProdDeploy
+      steps:
+      - bash: echo Build ProdDeploy
