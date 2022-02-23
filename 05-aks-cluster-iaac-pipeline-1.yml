@@ -18,13 +18,10 @@ steps:
     retryCount: '5'
 
 ## Terraform Initialize (State Azure Storage Account to store the backend)
-## Terraform Plan (Create Plan)
-## Terraform Apply (Use the plan created in previous step. Variables added in init will be applied here)
 - task: TerraformCLI@0
   inputs:
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
-    commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.securefilePath)'
     backendType: 'azurerm'
     backendServiceArm: 'az-rm-service-connection-cicdpriv'
     backendAzureRmSubscriptionId: 'f536b366-d4ce-4c98-8fad-092858591a5b'
@@ -37,4 +34,11 @@ steps:
     backendAzureRmKey: 'kubernetes-dev.tfstate'
     allowTelemetryCollection: true
 
-#
+## Terraform Apply (includes variables)
+- task: TerraformCLI@0
+  inputs:
+    command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+    environmentServiceName: 'az-rm-service-connection-cicdpriv'
+    commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.securefilePath)'
+ 
