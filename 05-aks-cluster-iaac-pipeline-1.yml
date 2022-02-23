@@ -1,0 +1,40 @@
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: echo Hello, K8s Terraform Azure!
+  displayName: 'Run a one-line script'
+
+- task: DownloadSecureFile@1
+  name: publickey
+  inputs:
+    secureFile: 'azure_rsa.pub'
+    retryCount: '5'
+
+## Terraform Initialize (State Azure Storage Account to store the backend)
+## Terraform Plan (Create Plan)
+## Terraform Apply (Use the plan created in previous step. Variables added in init will be applied here)
+- task: TerraformCLI@0
+  inputs:
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+    commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.securefilePath)'
+    backendType: 'azurerm'
+    backendServiceArm: 'az-rm-service-connection-cicdpriv'
+    backendAzureRmSubscriptionId: 'f536b366-d4ce-4c98-8fad-092858591a5b'
+    ensureBackend: true
+    backendAzureRmResourceGroupName: 'terraform-backend-rg'
+    backendAzureRmResourceGroupLocation: 'germanywestcentral'
+    backendAzureRmStorageAccountName: 'terraformstoreirinade'
+    backendAzureRmStorageAccountSku: 'Standard_LRS'
+    backendAzureRmContainerName: 'terraformstorecontainer'
+    backendAzureRmKey: 'kubernetes-dev.tfstate'
+    allowTelemetryCollection: true
+
+#
